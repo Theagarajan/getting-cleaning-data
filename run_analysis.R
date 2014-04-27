@@ -1,13 +1,15 @@
 features <- read.table('features.txt', col.names=c('id', 'name'))
 interesting_features <- grep('mean\\(\\)|std\\(\\)', features$name)
 
+act_labels <- read.table('activity_labels.txt', col.names=c('id', 'activity'))
+
 read_data <- function(dir) {
-  act_labels <- read.table('activity_labels.txt', col.names=c('id', 'activity'))
   
   data <- read.table(sprintf('%s/X_%s.txt', dir, dir), col.names=features$name)
   data <- data[,interesting_features]
   
-  data$activity <- merge(act_labels, read.table(sprintf('%s/y_%s.txt', dir, dir), col.names='id'))$activity
+#  data$activity <- merge(act_labels, read.table(sprintf('%s/y_%s.txt', dir, dir), col.names='id'))$activity
+  data$activity <- read.table(sprintf('%s/y_%s.txt', dir, dir))[,1]
   data$subject <- read.table(sprintf('%s/subject_%s.txt', dir, dir))[,1]
   data
 }
